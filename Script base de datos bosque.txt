@@ -1,0 +1,241 @@
+Create database BosqueSagrado
+
+Create table Cliente 
+(
+Id_Cliente int identity(1,1)  not null primary key, 
+Nombre Varchar(30),
+Apellido Varchar(30),
+TipoDocumento Varchar(30),
+NumeroDocumento Varchar(15),
+Celular Varchar(12),
+Correo Varchar(50),
+Departamento Varchar(30),
+Ciudad Varchar(30),
+Barrio Varchar(30),
+Direccion Varchar(30),
+Estado BIT
+)
+
+
+Create Table Sedes
+(
+Id_Sede int identity(1,1) not null Primary Key,
+NombreSede Varchar(30),
+UbicacioSede Varchar(30),
+Celular Varchar(15),
+Cabañas int,
+Estado BIT
+)
+
+
+Create Table CategoriaProducto
+(
+Id_Categoria int identity(1,1) not null Primary Key,
+Categoria Varchar(30),
+Descripcion Varchar(50),
+Estado BIT
+)
+
+
+
+
+Create Table Temporadas
+(
+Id_Temporada int identity(1,1) not null Primary Key,
+FechaInicio Datetime,
+FechaFinal Datetime,
+PrecioPorTemporada Float,
+PrecioSemanal Float,
+PrecioFinDeSemana Float,
+Estado Bit
+)
+
+
+
+
+
+Create Table Proveedores
+(
+Id_Proveedor int identity(1,1) not null Primary Key,
+Nombre Varchar(30),
+Celular Varchar(15),
+Correo Varchar(30),
+Ciudad_Departamento Varchar(50),
+Barrio Varchar(30),
+Direccion Varchar(30),
+Tipo_Documento Varchar(30),
+Documento Varchar (30),
+Estado BIT
+)
+
+
+
+
+
+Create Table Comodidades
+(
+Id_Comodidades int identity(1,1) not null Primary Key,
+NombreComodidades Varchar(30),
+Cantidad Float,
+FechaDeRegistro Datetime,
+Precio Float,
+Marca Varchar(20),
+Descripcion Varchar(50),
+)
+
+
+
+
+Create Table Cabañas
+(
+Id_Cabaña int identity(1,1) not null Primary Key,
+Nombre Varchar(50),
+TipoDeCabaña Varchar(20),
+Estado BIT,
+Id_Temporada int Foreign Key References Temporadas(Id_Temporada),
+Id_Sede Int Foreign Key References Sedes(Id_Sede)
+)
+
+
+
+
+Create Table CabañaComodidades
+(
+Id_CabañaComodidades int identity(1,1) not null Primary Key,
+Id_Cabaña int foreign Key References Cabañas(Id_Cabaña),
+Id_Comodidades int foreign Key References Comodidades(Id_Comodidades)
+)
+
+
+
+Create Table Img_Cabaña
+(
+Id_Imagen int identity(1,1) not null Primary Key,
+Id_Cabaña int foreign Key References Cabañas(Id_Cabaña),
+RutaImagen Varchar(100),
+Descripcion varchar(50),
+)
+
+
+
+Create table Compras
+(
+Id_Compra int identity(1,1) not null Primary Key,
+Id_Proveedor int Foreign Key References	Proveedores(Id_Proveedor),
+MetodoDePago varchar(20),
+Estado BIT,
+Subtotal Float,
+Iva Float,
+Total Float
+)
+
+
+Create Table Producto
+(
+Id_Producto int identity(1,1) not null Primary Key,
+Producto varchar(30),
+Id_Categoria int Foreign Key References	CategoriaProducto(Id_Categoria),
+Marca varchar(30),
+Cantidad int,
+Precio Float,
+Estado BIT
+)
+
+
+
+Create Table DetalleCompra
+(
+Id_DetalleCompra int identity(1,1) not null Primary Key,
+Id_Compra int Foreign Key References Compras(Id_Compra),
+Id_Producto int Foreign Key References Producto(Id_Producto),
+Cantidad Int,
+Subtotal Float
+)
+
+
+
+
+Create Table EstadosReserva
+(
+Id_Estado int identity(1,1) not null Primary Key,
+Nombre_Estado Varchar(30)
+)
+
+
+
+
+Create Table MetodoPago
+(
+Id_MetodoPago int identity(1,1) not null Primary Key,
+NombreMetodoPago Varchar(30)
+)
+
+
+
+
+Create Table Servicio
+(
+Id_Servicio int identity(1,1) not null Primary Key,
+NombreServicio Varchar(30),
+PrecioServicio Float,
+Descripcion Varchar(100),
+Id_Sede int Foreign Key References Sedes(Id_Sede),
+Estado Bit
+)
+
+
+Create Table ProductoPorServicio
+(
+Id_Serv_Produ int identity(1,1) not null Primary Key,
+Id_Producto int Foreign Key References Producto(Id_Producto),
+Id_Servicio int Foreign Key References Servicio(Id_Servicio)
+)
+
+
+
+Create Table Paquetes
+(
+Id_Paquete int identity(1,1) not null Primary Key,
+NombrePaquete Varchar(30),
+PrecioPaquete Float,
+Personas int,
+Dias int,
+Descuento Float,
+Estado BIT
+)
+
+
+Create Table ServicioPorPaquete
+(
+Id_Serv_Paque int identity(1,1) not null Primary Key,
+Id_Servicio int Foreign Key References Servicio(Id_Servicio),
+Id_Paquete int Foreign Key References Paquetes(Id_Paquete),
+Precio Float
+)
+
+
+Create Table Reservas
+(
+Id_Reserva int identity(1,1) not null Primary Key,
+FechaReserva Date,
+FechaEntrada date,
+FechaRegistro Date,
+Abono Float,
+Restante Float,
+MontoTotal Float,
+Id_Cliente int Foreign Key References Cliente(Id_Cliente),
+Id_Estado int Foreign Key References EstadosReserva(Id_Estado),
+Id_Sede int Foreign Key References Sedes(Id_Sede),
+Id_Cabaña int Foreign Key References Cabañas(Id_Cabaña),
+Id_Paquete int Foreign Key References Paquetes(Id_Paquete),
+Id_MetodoPago int Foreign Key References MetodoPago(Id_MetodoPago),
+)
+
+
+Create table ServiciosReserva
+(
+Id_Serv_Reserv int identity(1,1) not null Primary Key,
+Id_Servicio int Foreign Key References Servicio(Id_Servicio),
+Id_Reserva int Foreign Key References Reservas(Id_Reserva),
+Precio Float
+)
